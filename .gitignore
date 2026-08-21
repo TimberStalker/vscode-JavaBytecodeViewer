@@ -16,3 +16,4 @@ dist
 **/.checkstyle
 test-resources/
 **/.gradle
+external/

@@ -1,0 +1,3 @@
+[submodule "external/vscode-java"]
+	path = external/vscode-java
+	url = https://github.com/redhat-developer/vscode-java.git
