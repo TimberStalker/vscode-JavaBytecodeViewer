@@ -6,9 +6,14 @@
   "engines": {
     "vscode": "^1.134.0"
   },
+  "publisher": "TimberStalker",
   "categories": [
     "Other"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TimberStalker/vscode-JavaBytecodeViewer.git"
+  },
   "extensionDependencies": [
     "redhat.java",
     "vscjava.vscode-java-dependency"
