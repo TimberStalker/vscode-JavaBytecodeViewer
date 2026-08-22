@@ -1,9 +1,17 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
-import { json } from 'stream/consumers';
 import * as vscode from 'vscode';
 import { BytecodeProvider } from "./bytecodeProvider"
 
+const getUriFromSource = (source: any): vscode.Uri | undefined => {
+	if(source instanceof vscode.Uri){
+		return source;
+	} else if(source.nodeData){
+		return vscode.Uri.parse(source.uri);
+	}
+
+	return undefined;
+};
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -28,22 +36,13 @@ export function activate(context: vscode.ExtensionContext) {
 			if(!library) return;
 			classPath = await vscode.window.showInputBox({ prompt: "Enter Class Path"})
 			if(!classPath) return;
-		} else if(source.scheme && source.scheme === "jdt"){
-			const javaExtension = vscode.extensions.getExtension("redhat.java");
-			if(javaExtension)
-			{
-				const api = await javaExtension.activate();
-				const documentSymbols = await api.getDocumentSymbols();
-				const projectSettings = await api.getProjectSettings();
-				const classpaths = await api.getClasspaths();
-				console.log(classpaths);
-			}
-			const workspaceFolder = vscode.workspace.workspaceFolders?.[0].uri;
-			const uri = vscode.Uri.parse(source);
-			const jarIndex = uri.path.indexOf(".jar");
-			const libraryUri = vscode.Uri.parse(uri.path.substring(0, jarIndex + 4));
-			library = libraryUri.fsPath;
-			classPath = uri.path.substring(jarIndex + 5).replace(".java", "").replace("/", ".");
+		} else {
+			const uri = getUriFromSource(source);
+			if(!uri) return;
+			const [, path,,, item] = uri.query.split('=');
+			
+			library = path.substring(path.indexOf('/')+1).replaceAll('\\/', '/');
+			classPath = item.replace("/", "").replace("<", "").replace("(", ".").replace(".class", "");
 		}
 		
 		if(!library) return;
@@ -51,7 +50,7 @@ export function activate(context: vscode.ExtensionContext) {
 		
 		const uri = vscode.Uri.parse(`bytecode:${encodeURIComponent(classPath)}?class=${encodeURIComponent(library)}`);
 		const doc = await vscode.workspace.openTextDocument(uri);
-		await vscode.languages.setTextDocumentLanguage(doc, "log")
+		await vscode.languages.setTextDocumentLanguage(doc, "plaintext")
 		await vscode.window.showTextDocument(doc);
 	});
 

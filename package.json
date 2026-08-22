@@ -26,7 +26,7 @@
       "view/item/context":[
         {
           "command": "javabytecodeviewer.viewbytecode",
-          "when": "view == javaProjectExplorer && viewItem =~ /java:file(?=.*?\\b\\+uri\\b)/"
+          "when": "view == javaProjectExplorer && viewItem == java:type+class"
         }
       ],
       "editor/title/context": [
