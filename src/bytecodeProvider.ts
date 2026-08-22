@@ -18,7 +18,7 @@ export class BytecodeProvider implements vscode.TextDocumentContentProvider{
         }
         
         return new Promise((resolve, reject) => {
-            var process = exec(`javap -cp "${libraryPath}" -c "${classPath}"`, (error, stdout, stderr) => {
+            var process = exec(`javap -cp "${libraryPath}" -c -private "${classPath}"`, (error, stdout, stderr) => {
                 if(error) reject({error, stderr});
                 resolve(stdout);
             });
