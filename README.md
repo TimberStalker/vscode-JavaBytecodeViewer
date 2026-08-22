@@ -9,4 +9,4 @@ Images in referenced libraries are returned instead of failing to display.
 ## Known Issues
 
 + The bytecode view incorrectly shows color pickers.
-+ Currently uses javap on  
++ Currently uses javap on PATH
