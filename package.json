@@ -18,7 +18,9 @@
     "redhat.java",
     "vscjava.vscode-java-dependency"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onFileSystem:jdt"
+  ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
@@ -28,7 +30,7 @@
       }
     ],
     "menus": {
-      "view/item/context":[
+      "view/item/context": [
         {
           "command": "javabytecodeviewer.viewbytecode",
           "when": "view == javaProjectExplorer && viewItem == java:type+class"
@@ -42,7 +44,6 @@
         }
       ]
     }
-    
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
@@ -53,17 +54,20 @@
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.134.0",
     "@types/mocha": "^10.0.10",
     "@types/node": "24.x",
-    "typescript-eslint": "^8.61.1",
+    "@types/vscode": "^1.134.0",
+    "@vscode/test-cli": "^0.0.15",
+    "@vscode/test-electron": "^3.0.0",
     "eslint": "^10.5.0",
     "typescript": "^6.0.3",
-    "@vscode/test-cli": "^0.0.15",
-    "@vscode/test-electron": "^3.0.0"
+    "typescript-eslint": "^8.61.1"
   },
   "overrides": {
     "diff": "^8.0.4",
     "serialize-javascript": "^7.0.6"
+  },
+  "dependencies": {
+    "adm-zip": "^0.6.0"
   }
 }

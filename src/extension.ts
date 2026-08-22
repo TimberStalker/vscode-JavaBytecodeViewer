@@ -2,6 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import { BytecodeProvider } from "./bytecodeProvider"
+import { JdtFileSystemProvider } from './jdtFileSystemProvider';
 
 const getUriFromSource = (source: any): vscode.Uri | undefined => {
 	if(source instanceof vscode.Uri){
@@ -22,7 +23,8 @@ export function activate(context: vscode.ExtensionContext) {
 
 	const bytecodeviewer = vscode.workspace.registerTextDocumentContentProvider("bytecode", new BytecodeProvider)
 	context.subscriptions.push(bytecodeviewer);
-
+	const jdtFileProvider = vscode.workspace.registerFileSystemProvider("jdt", new JdtFileSystemProvider(), {isReadonly: true});
+	context.subscriptions.push(jdtFileProvider);
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with registerCommand
 	// The commandId parameter must match the command field in package.json
