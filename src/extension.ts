@@ -2,7 +2,8 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import { BytecodeProvider } from "./bytecodeProvider"
-import { JdtFileSystemProvider } from './jdtFileSystemProvider';
+import { Constants } from './constants';
+import { Commands } from './commands';
 
 const getUriFromSource = (source: any): vscode.Uri | undefined => {
 	if(source instanceof vscode.Uri){
@@ -13,6 +14,9 @@ const getUriFromSource = (source: any): vscode.Uri | undefined => {
 
 	return undefined;
 };
+export const createJdtBytecodeUri = (libraryPath: string, classPath: string): vscode.Uri => {
+	return vscode.Uri.parse(`${Constants.JdtBytecodeSchema}:${encodeURIComponent(classPath)}?class=${encodeURIComponent(libraryPath)}`)
+}
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -21,14 +25,9 @@ export function activate(context: vscode.ExtensionContext) {
 	// This line of code will only be executed once when your extension is activated
 	console.log('Java Bytecode Viewer is now active!');
 
-	const bytecodeviewer = vscode.workspace.registerTextDocumentContentProvider("bytecode", new BytecodeProvider)
-	context.subscriptions.push(bytecodeviewer);
-	const jdtFileProvider = vscode.workspace.registerFileSystemProvider("jdt", new JdtFileSystemProvider(), {isReadonly: true});
-	context.subscriptions.push(jdtFileProvider);
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	const viewbytecode = vscode.commands.registerCommand('javabytecodeviewer.viewbytecode', async (source?) => {
+	context.subscriptions.push(vscode.workspace.registerTextDocumentContentProvider(Constants.JdtBytecodeSchema, new BytecodeProvider));
+
+	context.subscriptions.push(vscode.commands.registerCommand(Commands.VIEW_BYTECODE, async (source?) => {
 		// The code you place here will be executed every time your command is executed
 		// Display a message box to the user
 		let library: string | undefined;
@@ -50,14 +49,11 @@ export function activate(context: vscode.ExtensionContext) {
 		if(!library) return;
 		if(!classPath) return;
 		
-		const uri = vscode.Uri.parse(`bytecode:${encodeURIComponent(classPath)}?class=${encodeURIComponent(library)}`);
+		const uri = createJdtBytecodeUri(library,classPath);
 		const doc = await vscode.workspace.openTextDocument(uri);
 		await vscode.languages.setTextDocumentLanguage(doc, "plaintext")
 		await vscode.window.showTextDocument(doc);
-	});
-
-
-	context.subscriptions.push(viewbytecode);
+	}));
 }
 
 // This method is called when your extension is deactivated

@@ -2,7 +2,7 @@
   "name": "javabytecodeviewer",
   "displayName": "JavaBytecodeViewer",
   "description": "Allows viewing the bytcode of a class in a referenced library in editor.",
-  "version": "0.0.1",
+  "version": "0.1.2",
   "engines": {
     "vscode": "^1.134.0"
   },
@@ -17,9 +17,6 @@
   "extensionDependencies": [
     "redhat.java",
     "vscjava.vscode-java-dependency"
-  ],
-  "activationEvents": [
-    "onFileSystem:jdt"
   ],
   "main": "./out/extension.js",
   "contributes": {
